@@ -40,14 +40,27 @@ async function saveDataToDatabase(data) {
 
 // Level 2: Get 7 Days Weather Forecast Data by Name
 async function getForecastDataByName(cityName) {
-  const data =await getDataFromDatabase();
-const forecastData=data.find((cityData)=>cityData.toLowercase()===cityName.toLowercase());
-if(forecastData){
-  return forecastData;
-}else{
-  throw new error("City not found");
-}
-  
+   try {
+    const data = await getDataFromDatabase();
+    const cityData = data.find((city) => city.name.toLowerCase() === cityName.toLowerCase());
+
+    if (cityData) {
+      return {
+        status: 'success',
+        message: 'Forecast data retrieved',
+        data: cityData.forecast,
+      };
+    } else {
+      throw new Error('City not found');
+    }
+  } catch (error) {
+    return {
+      status: 'error',
+      message: 'Failed to retrieve forecast data',
+      error: error.message,
+    };
+  }
+ 
 }
 
 
